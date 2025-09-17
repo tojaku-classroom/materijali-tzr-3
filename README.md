@@ -18,3 +18,4 @@ Ovdje su materijali organizirani po predmetnim mapama. Kliknite za otvaranje poj
 
 - [Vrste mobilnih uređaja i razvoj mobilne komunikacije](./pmu/Vrste%20mobilnih%20uređaja%20i%20razvoj%20mobilne%20komunikacije.md)
 - [Građa pametnih telefona](./pmu/Vrste%20mobilnih%20uređaja%20i%20razvoj%20mobilne%20komunikacije.md)
+- [Zadatak - Usporedba specifikacija pametnih telefona](./pmu/Zadatak%20-%20Usporedba%20specifikacija%20pametnih%20telefona.md)
