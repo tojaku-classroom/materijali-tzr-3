@@ -1,5 +1,5 @@
 
-# Zadatak: Usporedba specifikacija pametnih telefona
+# Zadatak - Usporedba specifikacija pametnih telefona
 
 Odaberite dva modela pametnih telefona (jedan iz srednjeg ranga i jedan iz premium/flagship klase). U izvještaju definirajte zadane tehničke pojmove, zabilježite specifikacije za oba uređaja, usporedite ih i objasnite kako pojedine specifikacije utječu na stvarno korisničko iskustvo.
 
