@@ -4,8 +4,8 @@ Ovdje su materijali organizirani po predmetnim mapama. Kliknite za otvaranje poj
 
 ## Skriptni jezici i Web programiranje
 
-- [HTML jezik i HTTP protokol](sjiwp/HTML jezik i HTTP protokol.md)
-- [World Wide Web](sjiwp/World Wide Web.md)
+- [HTML jezik i HTTP protokol](./sjiwp/HTML%20jezik%20i%20HTTP%20protokol.md)
+- [World Wide Web](./sjiwp/World%20Wide%20Web.md)
 
 ## Napredno i objektno programiranje
 
