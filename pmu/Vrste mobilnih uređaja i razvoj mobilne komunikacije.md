@@ -10,7 +10,7 @@ Mobilni uređaji su ključni dio svakodnevnog života, a njihov razvoj je usko p
 
 ### **Pametni telefoni (Smartphones)**
 
-- **Pametni telefoni** su uređaji s naprednim mogućnostima poput pristupa internetu, aplikacija, kamere visoke kvalitete i GPS-a, te niszom ostalih senzora.
+- **Pametni telefoni** su uređaji s naprednim mogućnostima poput pristupa internetu, aplikacija, kamere visoke kvalitete i GPS-a, te nizom ostalih senzora.
 - Koriste se operacijski sustavi poput **Android**, **iOS**, i **HarmonyOS**, a podržavaju širok raspon aplikacija i usluga putem specifičnih trgovina aplikacijama.
 - Razvoj novih aplikacija je jednostavan i dostupan svima.
 - **Primjeri**: iPhone serija, Samsung Galaxy, Google Pixel.
