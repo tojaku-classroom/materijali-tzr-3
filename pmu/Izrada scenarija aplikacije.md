@@ -20,7 +20,7 @@
 6. **Statistika**
     - Aplikacija prikazuje grafički prikaz dnevnog, tjednog i mjesečnog unosa vode.
     - Korisnik može vidjeti napredak prema postavljenim ciljevima.
-7. **ZaključakPrimjer scenarija za jednostavnu mobilnu aplikaciju**
+7. **Zaključak**
     - Na kraju dana, korisnik dobiva obavijest s povratnim informacijama (npr. "Danas ste unijeli 80% vašeg cilja").
 
 ## **Ključne napomene i pravila pri pisanju scenarija za aplikacije**
