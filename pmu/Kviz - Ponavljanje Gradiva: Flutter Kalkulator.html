@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flutter App Kviz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex items-center justify-center p-4">
+
+    <div id="app" class="w-full max-w-2xl bg-white rounded-xl shadow-lg overflow-hidden flex flex-col min-h-[400px]">
+        <!-- Sadržaj se ubacuje preko JS-a -->
+    </div>
+
+    <script>
+        const quizData = [
+            // 1. Upravljanje stanjem
+            { cat: "Upravljanje stanjem", q: "Koju klasu nasljeđuje `CalculatorProvider` kako bi omogućio upravljanje stanjem?", options: ["ChangeNotifier", "StatefulWidget", "InheritedWidget", "Bloc"], a: 0 },
+            { cat: "Upravljanje stanjem", q: "Koji se widget koristi u `main.dart` za ubacivanje `CalculatorProvider`-a u stablo widgeta aplikacije?", options: ["Provider.value", "ChangeNotifierProvider", "MultiProvider", "StateNotifier"], a: 1 },
+            { cat: "Upravljanje stanjem", q: "Kako `_calculateResult()` u `SecondScreen` pristupa provideru bez pretplate na stalne promjene?", options: ["Provider.of<CalculatorProvider>(context)", "context.watch<CalculatorProvider>()", "Provider.of<CalculatorProvider>(context, listen: false)", "context.readOnly<CalculatorProvider>()"], a: 2 },
+            { cat: "Upravljanje stanjem", q: "Koja se metoda poziva na kraju `addCalculation()`, `clearHistory()` i `deleteCalculation()` za ažuriranje widgeta koji slušaju?", options: ["setState()", "update()", "rebuild()", "notifyListeners()"], a: 3 },
+            { cat: "Upravljanje stanjem", q: "Koji widget obavija `ListView.builder` u `HistoryScreen` kako bi slušao isključivo promjene `CalculatorProvider`-a?", options: ["Consumer<CalculatorProvider>", "Selector", "Builder", "ProviderListener"], a: 0 },
+            
+            // 2. Trajna pohrana podataka
+            { cat: "Pohrana podataka", q: "Koja je specifična string vrijednost dodijeljena `_storageKey` varijabli koja se koristi za lokalnu pohranu?", options: ["'app_data'", "'calculation_history'", "'history'", "'calc_state'"], a: 1 },
+            { cat: "Pohrana podataka", q: "Koja se metoda koristi u `loadHistory()` za dohvaćanje spremljene liste izračuna iz lokalne pohrane?", options: ["prefs.getStringList(_storageKey)", "prefs.getList(_storageKey)", "prefs.readArray(_storageKey)", "prefs.fetchStrings(_storageKey)"], a: 0 },
+            { cat: "Pohrana podataka", q: "Kako se lista povijesti sprema na uređaj unutar `addCalculation()` metode?", options: ["await prefs.putList(_storageKey, _history)", "await prefs.saveArray(_storageKey, _history)", "await prefs.setStringList(_storageKey, _history)", "await prefs.writeStrings(_storageKey, _history)"], a: 2 },
+            { cat: "Pohrana podataka", q: "Koja se naredba izvršava u `clearHistory()` za brisanje podataka iz trajne pohrane uređaja?", options: ["prefs.delete(_storageKey)", "prefs.clear(_storageKey)", "prefs.erase(_storageKey)", "prefs.remove(_storageKey)"], a: 3 },
+            { cat: "Pohrana podataka", q: "Ako `prefs.getStringList(_storageKey)` vrati null tijekom `loadHistory()`, koja se zadana vrijednost dodjeljuje varijabli `_history`?", options: ["[] (Prazna lista)", "null", "['']", "0"], a: 0 },
+
+            // 3. Navigacija
+            { cat: "Navigacija", q: "Koja se metoda poziva pritiskom na gumb 'Pošalji' za prelazak korisnika na `SecondScreen`?", options: ["Navigator.go(context, ...)", "Navigator.push(context, MaterialPageRoute(...))", "Router.push(context, ...)", "Route.next(context, ...)"], a: 1 },
+            { cat: "Navigacija", q: "Kako se podaci iz tekstualnih polja eksplicitno prosljeđuju u `SecondScreen` tijekom navigacije?", options: ["Preko argumenata konstruktora (number1, number2)", "Kroz globalne varijable", "Kroz stanje providera", "Preko SharedPreferences"], a: 0 },
+            { cat: "Navigacija", q: "Koja se metoda pokreće kada se pritisne gumb 'Nazad' na `SecondScreen` ekranu?", options: ["Navigator.back(context)", "Route.pop(context)", "Navigator.pop(context)", "System.exit(0)"], a: 2 },
+            { cat: "Navigacija", q: "Kako aplikacija zatvara `AlertDialog` kada korisnik klikne 'Odustani' ili 'Obriši'?", options: ["dialog.close()", "context.dismiss()", "AlertDialog.hide()", "Navigator.of(dialogContext).pop()"], a: 3 },
+            { cat: "Navigacija", q: "Zahtijeva li ruta do `HistoryScreen` prosljeđivanje argumenata konstruktora unutar `MaterialPageRoute`-a?", options: ["Ne, poziva se jednostavno kao const HistoryScreen()", "Da, treba povijest izračuna", "Da, treba ID korisnika", "Da, treba Context provider"], a: 0 },
+
+            // 4. Korisnički unos i validacija
+            { cat: "Unos i validacija", q: "Koji specifičan tip ključa je dodijeljen varijabli `_formKey` za upravljanje stanjem validacije obrasca?", options: ["LocalKey<Form>()", "GlobalKey<FormState>()", "UniqueKey()", "ValueKey<String>()"], a: 1 },
+            { cat: "Unos i validacija", q: "Koji se objekti koriste za dohvaćanje točnog teksta upisanog u polja za brojeve?", options: ["TextEditingController", "TextFieldValue", "InputReader", "StringController"], a: 0 },
+            { cat: "Unos i validacija", q: "Što u funkciji `_validateNumber` označava da je unos ispravan i da prolazi sve testove?", options: ["true", "'' (prazan string)", "null", "1"], a: 2 },
+            { cat: "Unos i validacija", q: "Koja se specifična Dart metoda koristi unutar `_validateNumber` za provjeru može li se string pretvoriti u decimalni broj?", options: ["int.parse(value)", "num.convert(value)", "String.toDouble(value)", "double.tryParse(value)"], a: 3 },
+            { cat: "Unos i validacija", q: "Koji točan kod pokreće logiku validacije za sva polja unutar obrasca kada se klikne 'Pošalji'?", options: ["_formKey.currentState!.validate()", "form.check()", "validateAll()", "input.isValid()"], a: 0 },
+
+            // 5. UI Komponente
+            { cat: "UI Komponente", q: "Koji widget pruža strukturni temelj za ekrane, sadržavajući `AppBar` i `body`?", options: ["MaterialApp", "Container", "Scaffold", "Screen"], a: 2 },
+            { cat: "UI Komponente", q: "Koji widget u `HomeScreen` prikazuje skočnu poruku 'Obrazac je očišćen' na dnu ekrana?", options: ["Toast", "SnackBar", "PopupAlert", "Banner"], a: 1 },
+            { cat: "UI Komponente", q: "Koji widget prikazuje listu matematičkih operacija za odabir u `SecondScreen`-u?", options: ["DropdownButton<String>", "SelectMenu", "Picker", "ChoiceBox"], a: 0 },
+            { cat: "UI Komponente", q: "Unutar `HistoryScreen`-a, koji widget dinamički gradi scrollable listu na temelju broja stavki u povijesti?", options: ["Column", "DynamicList", "ScrollBox", "ListView.builder"], a: 3 },
+            { cat: "UI Komponente", q: "Koji specifični widget vraća `builder` unutar `showDialog` za traženje potvrde brisanja od korisnika?", options: ["AlertDialog", "ConfirmDialog", "ModalBox", "WarningPopup"], a: 0 },
+
+            // 6. Asinkrono programiranje
+            { cat: "Asinkrono programiranje", q: "Koja se asinkrona metoda poziva u `main()` kako bi se osiguralo da su dodaci spremni prije pokretanja aplikacije?", options: ["Flutter.init()", "WidgetsFlutterBinding.ensureInitialized()", "App.start()", "System.prepare()"], a: 1 },
+            { cat: "Asinkrono programiranje", q: "Koji je točan povratni tip (return type) metoda `loadHistory()`, `addCalculation()` i `clearHistory()`?", options: ["void", "async", "Future<void>", "Promise"], a: 2 },
+            { cat: "Asinkrono programiranje", q: "Koju ključnu riječ treba dodati u potpis funkcije `deleteCalculation` kako bi mogla koristiti ključnu riječ `await`?", options: ["async", "future", "defer", "await"], a: 0 },
+            { cat: "Asinkrono programiranje", q: "Koja se asinkrona metoda poziva za dobivanje pristupa objektu lokalne pohrane?", options: ["new SharedPreferences()", "Prefs.load()", "Storage.init()", "await SharedPreferences.getInstance()"], a: 3 },
+            { cat: "Asinkrono programiranje", q: "U `addCalculation`, zašto se ključna riječ `await` koristi prije `prefs.setStringList(...)`?", options: ["Za brži rad aplikacije", "Pauzira izvršavanje funkcije dok se spremanje ne završi", "Sprječava curenje memorije", "Enkriptira podatke"], a: 1 }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+        let activeQuizData = [];
+
+        const appDiv = document.getElementById('app');
+
+        // Funkcija za miješanje niza (Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderStartScreen() {
+            appDiv.innerHTML = `
+                <div class="p-8 flex-1 flex flex-col items-center justify-center text-center fade-in">
+                    <h1 class="text-3xl font-bold text-blue-600 mb-4">Flutter Kviz</h1>
+                    <p class="text-gray-600 mb-8 max-w-md">Testirajte svoje znanje o upravljanju stanjem, pohrani, navigaciji, validaciji, UI komponentama i asinkronom programiranju na temelju izrađene Flutter aplikacije.</p>
+                    <p class="text-sm font-semibold text-gray-500 mb-8">30 Pitanja • Automatsko ocjenjivanje • Nasumičan redoslijed</p>
+                    <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-colors">Započni kviz</button>
+                </div>
+            `;
+        }
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = [];
+            
+            // Kopiraj podatke kako ne bismo mijenjali original
+            let clonedData = JSON.parse(JSON.stringify(quizData));
+            // Promiješaj pitanja
+            activeQuizData = shuffleArray(clonedData);
+            
+            // Promiješaj opcije odgovora za svako pitanje i ažuriraj indeks točnog odgovora
+            activeQuizData.forEach(q => {
+                const correctAnswerText = q.options[q.a];
+                q.options = shuffleArray(q.options);
+                q.a = q.options.indexOf(correctAnswerText);
+            });
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = activeQuizData[currentQuestion];
+            const progress = ((currentQuestion) / activeQuizData.length) * 100;
+            
+            let optionsHtml = '';
+            q.options.forEach((opt, index) => {
+                optionsHtml += `
+                    <button onclick="selectOption(${index})" class="w-full text-left p-4 rounded-lg border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all text-base text-gray-800 mb-3">
+                        ${opt.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+                    </button>
+                `;
+            });
+
+            appDiv.innerHTML = `
+                <div class="h-2 w-full bg-gray-200">
+                    <div class="h-full bg-blue-600 transition-all duration-300" style="width: ${progress}%"></div>
+                </div>
+                <div class="p-6 flex-1 flex flex-col fade-in">
+                    <div class="flex justify-between text-sm text-gray-500 font-bold mb-4 uppercase tracking-wider">
+                        <span>${q.cat}</span>
+                        <span>Pitanje ${currentQuestion + 1}/${activeQuizData.length}</span>
+                    </div>
+                    <h2 class="text-xl font-semibold mb-6 text-gray-800">${q.q.replace(/`/g, '')}</h2>
+                    <div class="flex-1">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectOption(index) {
+            userAnswers.push(index);
+            if (index === activeQuizData[currentQuestion].a) {
+                score++;
+            }
+            
+            currentQuestion++;
+            
+            if (currentQuestion < activeQuizData.length) {
+                renderQuestion();
+            } else {
+                renderResults();
+            }
+        }
+
+        function renderResults() {
+            const percentage = Math.round((score / activeQuizData.length) * 100);
+            let color = percentage >= 80 ? 'text-green-600' : percentage >= 50 ? 'text-yellow-600' : 'text-red-600';
+            let message = percentage >= 80 ? 'Odličan posao!' : percentage >= 50 ? 'Dobar trud, ali potrebno je ponavljanje.' : 'Trebali biste ponovno pregledati kod.';
+
+            let reviewHtml = '<div class="mt-8 text-left max-w-full overflow-hidden">';
+            reviewHtml += '<h3 class="font-bold text-xl mb-4">Detaljan pregled</h3><div class="space-y-4">';
+            
+            activeQuizData.forEach((q, i) => {
+                const isCorrect = userAnswers[i] === q.a;
+                const icon = isCorrect ? '<span class="text-green-500 font-bold">✓</span>' : '<span class="text-red-500 font-bold">✗</span>';
+                const bg = isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200';
+                
+                reviewHtml += `
+                    <div class="p-4 rounded-lg border ${bg}">
+                        <p class="font-medium text-base mb-2">${icon} ${q.q.replace(/`/g, '')}</p>
+                        <p class="text-sm text-gray-800">Točan odgovor: <span class="bg-white px-2 py-0.5 border rounded">${q.options[q.a].replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span></p>
+                        ${!isCorrect ? `<p class="text-sm text-red-600 mt-1">Vaš odgovor: <span class="line-through">${q.options[userAnswers[i]].replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span></p>` : ''}
+                    </div>
+                `;
+            });
+            reviewHtml += '</div></div>';
+
+            appDiv.innerHTML = `
+                <div class="h-2 w-full bg-blue-600"></div>
+                <div class="p-8 text-center flex-1 overflow-y-auto fade-in h-[80vh]">
+                    <h2 class="text-3xl font-bold mb-2">Kviz je završen!</h2>
+                    <p class="text-gray-600 mb-6">${message}</p>
+                    
+                    <div class="flex justify-center items-center space-x-8 mb-8">
+                        <div class="text-center">
+                            <p class="text-5xl font-black ${color}">${score}<span class="text-2xl text-gray-400">/${activeQuizData.length}</span></p>
+                            <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider mt-1">Rezultat</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-5xl font-black ${color}">${percentage}%</p>
+                            <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider mt-1">Točnost</p>
+                        </div>
+                    </div>
+
+                    <button onclick="startQuiz()" class="bg-gray-800 hover:bg-black text-white font-bold py-3 px-8 rounded-full transition-colors mb-4">Ponovi kviz</button>
+                    
+                    ${reviewHtml}
+                </div>
+            `;
+        }
+
+        // Inicijalizacija
+        renderStartScreen();
+    </script>
+</body>
+</html>
